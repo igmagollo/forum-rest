@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component
 class NewTopicFormMapper(
     private val courseService: CourseService,
     private val userService: UserService,
-): Mapper<NewTopicForm, Topic?> {
-    override fun map(t: NewTopicForm): Topic? {
-        val course = this.courseService.find(t.idCourse) ?: return null
-        val author = this.userService.find(t.idAuthor) ?: return null
+): Mapper<NewTopicForm, Topic> {
+    override fun map(t: NewTopicForm): Topic {
+        val course = this.courseService.find(t.idCourse)
+        val author = this.userService.find(t.idAuthor)
         return Topic(
             title = t.title,
             message = t.message,

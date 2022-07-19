@@ -3,6 +3,7 @@ package com.exemplo.forum.service
 import com.exemplo.forum.dto.NewTopicForm
 import com.exemplo.forum.dto.TopicView
 import com.exemplo.forum.dto.UpdateTopicForm
+import com.exemplo.forum.exceptions.NotFoundException
 import com.exemplo.forum.mapper.NewTopicFormMapper
 import com.exemplo.forum.mapper.TopicViewMapper
 import com.exemplo.forum.model.Topic
@@ -20,20 +21,21 @@ class TopicService(
     }
 
     fun findTopic(id: Long): TopicView? {
-        val topic = this.topics.find { t -> t.id == id } ?: return null
+        val topic = this.topics.find { t -> t.id == id } ?: throw NotFoundException("Topic not found")
         return topicViewMapper.map(topic)
     }
 
-    fun insert(form: NewTopicForm): TopicView? {
-        var topic = newTopicFormMapper.map(form) ?: return null
-        topic = topic.copy(id = idSeq.next())
+    fun insert(form: NewTopicForm): TopicView {
+        val topic = newTopicFormMapper
+            .map(form)
+            .copy(id = idSeq.next())
         this.topics.add(topic)
         return topicViewMapper.map(topic)
     }
 
     fun update(id: Long, form: UpdateTopicForm): TopicView? {
         val idx = this.topics.indexOfFirst { it.id == id }
-        if (idx == -1) return null
+        if (idx == -1) throw NotFoundException("Topic not found")
         val topic = this.topics[idx]
         val updatedTopic = topic.copy(
             title = form.title,

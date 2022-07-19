@@ -1,5 +1,6 @@
 package com.exemplo.forum.service
 
+import com.exemplo.forum.exceptions.NotFoundException
 import com.exemplo.forum.model.Course
 import org.springframework.stereotype.Service
 
@@ -19,7 +20,7 @@ class CourseService(
         this.courses.add(course)
     }
 
-    fun find(id: Long): Course? {
-        return this.courses.find { c -> c.id == id }
+    fun find(id: Long): Course {
+        return this.courses.find { c -> c.id == id } ?: throw NotFoundException("Course not found")
     }
 }

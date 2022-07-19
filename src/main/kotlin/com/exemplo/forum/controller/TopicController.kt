@@ -40,7 +40,7 @@ class TopicController(
         @RequestBody @Valid form: NewTopicForm,
         uriBuilder: UriComponentsBuilder
     ): ResponseEntity<TopicView> {
-        val topicView = service.insert(form) ?: throw Error("Not found")
+        val topicView = service.insert(form)
         val uri = uriBuilder.path("/topics/${topicView.id}").build().toUri()
         return ResponseEntity.created(uri).body(topicView)
     }
